@@ -1,0 +1,79 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Setup script to enable CrowdStrike Image Assessment.",
+    "Parameters": {
+        "RoleName": {
+            "Description": "Name of the role CrowdStrike will assume",
+            "Type": "String",
+            "MinLength": "1",
+            "Default": "CrowdStrike-Image-Assessment"
+        },
+        "ExternalID": {
+            "Description": "External ID for created role",
+            "Type": "String",
+            "MinLength": "2"
+        },
+        "CSAccountNumber": {
+            "Description": "Crowdstrike account number",
+            "Type": "String",
+            "MinLength": "12",
+            "MaxLength": "12",
+            "Default": ""
+        },
+        "CSRoleName": {
+            "Description": "CrowdStrike platform role name",
+            "Type": "String",
+            "MinLength": "2",
+            "Default": "CrowdStrikeCustomerRegistryAssessmentRole"
+        }
+    },
+    "Resources": {
+        "CrowdStrikeImageAssessmentRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                        "arn:aws:iam::",
+                                        {
+                                            "Ref": "CSAccountNumber"
+                                        },
+                                        ":role/",
+                                        {
+                                            "Ref": "CSRoleName"
+                                        }
+                                        ]
+                                    ]
+                                    }
+                            },
+                            "Condition": {
+                                "StringEquals": {
+                                    "sts:ExternalId": {
+                                        "Ref": "ExternalID"
+                                    }
+                                }
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "RoleName": {
+                    "Ref": "RoleName"
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+                ],
+                "Policies": []
+            }
+        }
+    }
+}
