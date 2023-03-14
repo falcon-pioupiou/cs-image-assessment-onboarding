@@ -17,8 +17,7 @@
             "Description": "Crowdstrike account number",
             "Type": "String",
             "MinLength": "12",
-            "MaxLength": "12",
-            "Default": ""
+            "MaxLength": "12"
         },
         "CSRoleName": {
             "Description": "CrowdStrike platform role name",
