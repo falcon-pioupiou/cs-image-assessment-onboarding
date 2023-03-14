@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Setup script to enable CrowdStrike Image Assessment.",
+    "Description": "Deploy IAM Role for CrowdStrike Image Assessment",
     "Parameters": {
         "RoleName": {
             "Description": "Name of the role CrowdStrike will assume",
