@@ -227,7 +227,7 @@ function main {
     if ! aws cloudformation describe-stack-set --stack-set-name "${stack_name}" --profile "${aws_profile}" --region "${default_region}" >/dev/null 2>&1; then
         aws cloudformation create-stack-set --stack-set-name "${stack_name}" \
         --template-body file://crowdstrike-ia-integration.json \
-        --description "Configures Image Assessment IAM role in child accounts" \
+        --description "Configure Image Assessment IAM role in child accounts" \
         --parameters "${stack_parameters}" \
         --permission-model SERVICE_MANAGED \
         --auto-deployment "Enabled=true,RetainStacksOnAccountRemoval=false" \
