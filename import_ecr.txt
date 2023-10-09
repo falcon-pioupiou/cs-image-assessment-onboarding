@@ -1,0 +1,41 @@
+export FALCON_CLIENT_ID=
+export FALCON_CLIENT_SECRET=
+export FALCON_CLOUD_API=api.crowdstrike.com # <= api.eu-1.crowdstrike.com  api.us-2.crowdstrike.com api.crowdstrike.com
+
+
+export BEARER_API_TOKEN=$(curl \
+--data "client_id=${FALCON_CLIENT_ID}&client_secret=${FALCON_CLIENT_SECRET}" \
+--request POST \
+--silent \
+https://${FALCON_CLOUD_API}/oauth2/token | jq -cr '.access_token | values')
+
+
+# Load all aws account
+# Load all regions
+
+# loop all aws account
+  # loop all regions
+
+post_data=$(cat <<EOF
+{
+  "type": "ecr",
+  "url": "https://${aws_account}.dkr.ecr.eu-central-1.amazonaws.com",
+  "user_defined_alias": "",
+  "credential": {
+    "details": {
+      "aws_iam_role": "arn:aws:iam::${aws_account}:role/cs_myrole",
+      "aws_external_id": "<EXTERNAL ID USED>"
+    }
+  }
+}
+EOF
+)
+
+curl --request POST \
+  --url "https://${FALCON_CLOUD_API}/container-security/entities/registries/v1" \
+  --header "Authorization: Bearer ${BEARER_API_TOKEN}" \
+  --header 'Content-Type: application/json' \
+  --data "$post_data"
+
+  # end loop regions
+# end loop aws account
